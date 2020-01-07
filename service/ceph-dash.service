@@ -1,0 +1,12 @@
+[Unit]
+Description=Monitoring Cluster Ceph
+
+[Service]
+Type=simple
+
+ExecStart=/opt/ceph-dash/ceph-dash.py -d
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
