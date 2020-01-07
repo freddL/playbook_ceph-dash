@@ -1,0 +1,35 @@
+- hosts: pve
+  environment:
+    https_proxy: http://proxy.tld:8080
+
+  tasks:
+
+   - name: Run a Update packages list
+     apt: update_cache=yes
+
+   - name: install git
+     apt:
+      name: git
+      state: present
+
+   - name: install python-pip
+     apt:
+      name: python-pip
+      state: present
+
+   - name : install flask
+     shell: pip install flask
+
+   - name: Clone ceph-dash
+     git:
+      repo: 'https://github.com/Crapworks/ceph-dash.git'
+      dest: /opt/ceph-dash
+
+   - name: creat service ceph-dash.service
+     template: src=services/ceph-dash.service dest=/etc/systemd/system/ceph-dash.service mode=644
+
+   - name: reload daemon systemd
+     shell: systemctl daemon-reload
+
+   - name: start ceph-dash.service
+     service: name=ceph-dash.service state=started enabled=yes
